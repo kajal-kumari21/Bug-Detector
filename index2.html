@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Advanced Bug Tracker</title>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-p1fq1EzlZpVj1eNnYxZ2gIPJqQm3Bk8jA6/Sm3xTPG/QPNBw1E6EXlNCO3OzmkbWcXG4UqJdLhGxxy1QkXqdNg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="./style2.css">
+</head>
+
+<body>
+  <div class="container">
+    <!-- Header with Dark Mode Toggle -->
+    <header class="header">
+      <h1>Advanced Bug Tracker</h1>
+      <div class="theme-toggle">
+        <input type="checkbox" id="darkModeToggle">
+        <label for="darkModeToggle"><i class="fas fa-moon"></i></label>
+      </div>
+      <label class="toggle-container">
+        <input type="checkbox" id="darkModeToggle">
+        <span class="toggle-switch"></span>
+        <span class="toggle-label">Dark Mode</span>
+      </label>
+      
+    </header>
+    
+    <!-- Issue Input Form -->
+    <div class="jumbotron">
+      <h3><i class="fas fa-plus-circle"></i> Add New Bug:</h3>
+      <form id="issueInputForm" onsubmit="submitIssue(event)">
+        <!-- Title Field -->
+        <div class="form-group">
+          <label for="issueTitle">Title</label>
+          <input type="text" id="issueTitle" placeholder="Bug title ..." required>
+        </div>
+        
+        <!-- Description Field -->
+        <div class="form-group">
+          <label for="issueDescription">Description</label>
+          <textarea id="issueDescription" placeholder="Describe the bug ..." required></textarea>
+        </div>
+        
+        <!-- Severity Select -->
+        <div class="form-group">
+          <label for="issueSeverity">Severity</label>
+          <select id="issueSeverity" required>
+            <option value="" disabled selected>Select severity</option>
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
+            <option value="Critical">Critical</option>
+          </select>
+        </div>
+        
+        <!-- Priority Select -->
+        <div class="form-group">
+          <label for="issuePriority">Priority</label>
+          <select id="issuePriority" required>
+            <option value="" disabled selected>Select priority</option>
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
+          </select>
+        </div>
+        
+        <!-- Steps to Reproduce Field -->
+        <div class="form-group">
+          <label for="issueSteps">Steps to Reproduce</label>
+          <textarea id="issueSteps" placeholder="Steps to reproduce the bug ..." required></textarea>
+        </div>
+        
+        <!-- Environment Field -->
+        <div class="form-group">
+          <label for="issueEnvironment">Environment</label>
+          <input type="text" id="issueEnvironment" placeholder="e.g., Windows 10, Chrome 89 ..." required>
+        </div>
+        
+        <!-- Assigned To Field -->
+        <div class="form-group">
+          <label for="issueAssignedTo">Assigned To</label>
+          <input type="text" id="issueAssignedTo" placeholder="Enter responsible ..." required>
+        </div>
+        
+        <!-- Submit Button -->
+        <button type="submit"><i class="fas fa-paper-plane"></i> Add Bug</button>
+      </form>
+    </div>
+
+    <!-- Search and Filter Section -->
+    <div class="search-filter">
+      <!-- Search Input -->
+      <input type="text" id="searchInput" placeholder="Search bugs by title or description..." oninput="searchIssues()">
+      
+      <!-- Filters Container -->
+      <div class="filters">
+        <!-- Status Filter Select -->
+        <select id="filterStatus" onchange="filterIssues()">
+          <option value="" selected>All Statuses</option>
+          <option value="Open">Open</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Resolved">Resolved</option>
+          <option value="Closed">Closed</option>
+        </select>
+        
+        <!-- Severity Filter Select -->
+        <select id="filterSeverity" onchange="filterIssues()">
+          <option value="" selected>All Severities</option>
+          <option value="Low">Low</option>
+          <option value="Medium">Medium</option>
+          <option value="High">High</option>
+          <option value="Critical">Critical</option>
+        </select>
+        
+        <!-- Priority Filter Select -->
+        <select id="filterPriority" onchange="filterIssues()">
+          <option value="" selected>All Priorities</option>
+          <option value="Low">Low</option>
+          <option value="Medium">Medium</option>
+          <option value="High">High</option>
+        </select>
+        
+        <!-- Assigned To Filter Select -->
+        <select id="filterAssignedTo" onchange="filterIssues()">
+          <option value="" selected>All Assignees</option>
+          <!-- Dynamically populated based on existing issues -->
+        </select>
+      </div>
+    </div>
+
+    <!-- Issues List -->
+    <div id="issuesList"></div>
+  </div>
+
+  <!-- Edit Issue Modal -->
+  <div id="editModal" class="modal" aria-hidden="true" role="dialog" aria-labelledby="editModalTitle">
+    <div class="modal-content">
+      <!-- Close Button -->
+      <span class="close" onclick="closeModal()">&times;</span>
+      
+      <!-- Modal Title -->
+      <h3 id="editModalTitle"><i class="fas fa-edit"></i> Edit Bug</h3>
+      
+      <!-- Edit Issue Form -->
+      <form id="editIssueForm" onsubmit="updateIssue(event)">
+        <!-- Hidden Input for Issue ID -->
+        <input type="hidden" id="editIssueId">
+        
+        <!-- Title Field -->
+        <div class="form-group">
+          <label for="editIssueTitle">Title</label>
+          <input type="text" id="editIssueTitle" required>
+        </div>
+        
+        <!-- Description Field -->
+        <div class="form-group">
+          <label for="editIssueDescription">Description</label>
+          <textarea id="editIssueDescription" required></textarea>
+        </div>
+        
+        <!-- Severity Select -->
+        <div class="form-group">
+          <label for="editIssueSeverity">Severity</label>
+          <select id="editIssueSeverity" required>
+            <option value="" disabled selected>Select severity</option>
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
+            <option value="Critical">Critical</option>
+          </select>
+        </div>
+        
+        <!-- Priority Select -->
+        <div class="form-group">
+          <label for="editIssuePriority">Priority</label>
+          <select id="editIssuePriority" required>
+            <option value="" disabled selected>Select priority</option>
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
+          </select>
+        </div>
+        
+        <!-- Steps to Reproduce Field -->
+        <div class="form-group">
+          <label for="editIssueSteps">Steps to Reproduce</label>
+          <textarea id="editIssueSteps" required></textarea>
+        </div>
+        
+        <!-- Environment Field -->
+        <div class="form-group">
+          <label for="editIssueEnvironment">Environment</label>
+          <input type="text" id="editIssueEnvironment" required>
+        </div>
+        
+        <!-- Assigned To Field -->
+        <div class="form-group">
+          <label for="editIssueAssignedTo">Assigned To</label>
+          <input type="text" id="editIssueAssignedTo" required>
+        </div>
+        
+        <!-- Status Select -->
+        <div class="form-group">
+          <label for="editIssueStatus">Status</label>
+          <select id="editIssueStatus" required>
+            <option value="" disabled selected>Select status</option>
+            <option value="Open">Open</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Resolved">Resolved</option>
+            <option value="Closed">Closed</option>
+          </select>
+        </div>
+        
+        <!-- Update Button -->
+        <button type="submit"><i class="fas fa-save"></i> Update Bug</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Custom JavaScript -->
+  <script src="./main.js"></script>
+</body>
+
+</html>
