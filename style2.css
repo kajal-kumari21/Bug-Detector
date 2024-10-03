@@ -13,7 +13,7 @@
   --border-color: #bdc3c7;
   --success-color: #27ae60;
   --warning-color: #f39c12;
-  --modal-bg: #ffffff;
+  --modal-bg:  #7ba6d1;
 }
 
 /* Dark Theme Colors */
@@ -678,10 +678,19 @@ body.dark-mode .issue-card {
 }
 
 body.dark-mode .form-group label,
-body.dark-mode .header h1,
 body.dark-mode .jumbotron h3,
 body.dark-mode .issue-card h3 {
   color: var(--text-color);
+  color: #b2b6b6;
+}
+/* CSS for the header h1 */
+body.dark-mode .header h1{
+  font-size: 2.5em;
+  color: #1d1c1c;
+  text-align: center;
+  margin: 0;
+  padding: 10px;
+  font-family: 'Montserrat', sans-serif; /* Example: Set font family */
 }
 
 body.dark-mode .form-group input[type="text"],
