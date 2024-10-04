@@ -417,6 +417,149 @@
       document.getElementById('inProgressBugs').textContent = inProgressBugs;
       document.getElementById('resolvedBugs').textContent = resolvedBugs;
     }
+    // Dark Mode Toggle
+const darkModeToggle = document.getElementById('darkModeToggle');
+darkModeToggle.addEventListener('change', () => {
+  document.body.classList.toggle('dark-mode', darkModeToggle.checked);
+  // Save dark mode preference
+  localStorage.setItem('darkMode', darkModeToggle.checked);
+});
+
+// Load dark mode preference on page load
+window.onload = function() {
+  populateAssignedToFilter();
+  populateDashboard();
+  loadSettings();
+};
+
+// Mobile Menu Toggle
+const mobileMenu = document.getElementById('mobile-menu');
+const navbarMenu = document.querySelector('.navbar-menu');
+
+mobileMenu.addEventListener('click', () => {
+  navbarMenu.classList.toggle('active');
+  mobileMenu.classList.toggle('active');
+});
+
+// Close mobile menu when a link is clicked
+const navbarLinks = document.querySelectorAll('.navbar-link');
+navbarLinks.forEach(link => {
+  link.addEventListener('click', () => {
+    if (navbarMenu.classList.contains('active')) {
+      navbarMenu.classList.remove('active');
+      mobileMenu.classList.remove('active');
+    }
+  });
+});
+
+// Example JavaScript for Modal (Edit Issue)
+function openModal(issueId) {
+  // Fetch issue data based on issueId and populate the form
+  // For demonstration, we'll use dummy data
+  document.getElementById('editIssueId').value = issueId;
+  document.getElementById('editIssueTitle').value = "Sample Bug Title";
+  document.getElementById('editIssueDescription').value = "Sample bug description...";
+  document.getElementById('editIssueSeverity').value = "High";
+  document.getElementById('editIssuePriority').value = "Medium";
+  document.getElementById('editIssueSteps').value = "1. Step one\n2. Step two";
+  document.getElementById('editIssueEnvironment').value = "Windows 10, Chrome 89";
+  document.getElementById('editIssueAssignedTo').value = "John Doe";
+  document.getElementById('editIssueStatus').value = "Open";
+
+  // Display the modal
+  document.getElementById('editModal').style.display = 'flex';
+}
+
+function closeModal() {
+  document.getElementById('editModal').style.display = 'none';
+}
+
+// Close modal when clicking outside of the modal content
+window.onclick = function(event) {
+  const modal = document.getElementById('editModal');
+  if (event.target == modal) {
+    modal.style.display = 'none';
+  }
+}
+
+// Placeholder functions for search and filter
+function searchIssues() {
+  // Implement search functionality
+  console.log('Search triggered');
+}
+
+function filterIssues() {
+  // Implement filter functionality
+  console.log('Filter triggered');
+}
+
+// Example function to populate Assigned To filter dynamically
+function populateAssignedToFilter() {
+  const filterAssignedTo = document.getElementById('filterAssignedTo');
+  // Example data; in a real app, fetch this from the database
+  const assignees = ['John Doe', 'Jane Smith', 'Alice Johnson'];
+  assignees.forEach(assignee => {
+    const option = document.createElement('option');
+    option.value = assignee;
+    option.textContent = assignee;
+    filterAssignedTo.appendChild(option);
+  });
+}
+
+// Function to populate dashboard with sample data
+function populateDashboard() {
+  // Example data; in a real app, fetch this from the database
+  const totalBugs = 50;
+  const openBugs = 20;
+  const inProgressBugs = 15;
+  const resolvedBugs = 15;
+
+  document.getElementById('totalBugs').textContent = totalBugs;
+  document.getElementById('openBugs').textContent = openBugs;
+  document.getElementById('inProgressBugs').textContent = inProgressBugs;
+  document.getElementById('resolvedBugs').textContent = resolvedBugs;
+}
+
+// Handle Settings Form Submission
+const settingsForm = document.getElementById('settingsForm');
+settingsForm.addEventListener('submit', function(event) {
+  event.preventDefault(); // Prevent form from submitting traditionally
+
+  const username = document.getElementById('username').value.trim();
+  const email = document.getElementById('email').value.trim();
+
+  if (username && email) {
+    // Save to LocalStorage
+    localStorage.setItem('username', username);
+    localStorage.setItem('email', email);
+
+    // Optionally, provide feedback to the user
+    alert('Settings saved successfully!');
+  } else {
+    alert('Please fill in both fields.');
+  }
+});
+
+// Load Settings from LocalStorage
+function loadSettings() {
+  const savedUsername = localStorage.getItem('username');
+  const savedEmail = localStorage.getItem('email');
+  const darkMode = JSON.parse(localStorage.getItem('darkMode'));
+
+  if (savedUsername) {
+    document.getElementById('username').value = savedUsername;
+  }
+
+  if (savedEmail) {
+    document.getElementById('email').value = savedEmail;
+  }
+
+  if (darkMode) {
+    darkModeToggle.checked = true;
+    document.body.classList.add('dark-mode');
+  }
+}
+
   </script>
 </body>
 
